@@ -1,14 +1,7 @@
 name: Github Actions Debug
 
 on:
-  push:
-    branches:
-      - develop
-      - feature
-  pull_request:
-    branches: 
-      - develop
-      - feature
+  [push, pull_request]
 
 jobs:
   build:
@@ -19,6 +12,10 @@ jobs:
       - uses: action/checkout@v2
     - name: Use Node.js
       - uses: action/setup-node@v2
+    - name: Branch name
+      - run: echo running on branch ${GITHUB_REF##*/}   # get branch name and run
+    - name: Build the project           # auto build/git actions 
+      - run: npm run build --if-present   # upon commit
     - name: Compose up the docker
       - run: docker-compose -f "docker-compose.yml" up -d --build
     - name: Run tests from the built image
